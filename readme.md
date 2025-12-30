@@ -32,8 +32,8 @@ Then download this CSV and name it `obsidian_files_redacted.csv`.
 3. Write book using AI:
 
 ```sh
-python obsidian-to-audiobook/2_write_book_using_ai.py \
-  --input_file obsidian_files_redacted.csv \
+python 2_write_book_using_ai.py \
+  --input_file 'obsidian_files_redacted.csv' \
   --folder 'path/to/your/obsidian/notes' \
   --column list \
   --value personal \
