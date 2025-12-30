@@ -1,0 +1,5 @@
+*.csv
+*book*.md
+*.mp3
+.env
+personal.readme.md
