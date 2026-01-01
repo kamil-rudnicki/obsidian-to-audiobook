@@ -406,6 +406,10 @@ def main():
             
         output_file = output_dir / f"{safe_title}.{file_extension}"
         print(f"Target file: {output_file}")
+        
+        if output_file.exists():
+            print(f"Skipping {output_file} - already exists")
+            continue
     
         # Clean text for speech
         cleaned_text = clean_text_for_speech(section_content)
