@@ -7,6 +7,8 @@
 ```bash
 OPENROUTER_API_KEY=your_openrouter_api_key
 OPENROUTER_MODEL=anthropic/claude-sonnet-4.5
+
+# Only one of those is needed:
 OPENAI_API_KEY=your_openai_api_key
 GOOGLE_APPLICATION_CREDENTIALS=/full/path/google-service-account-442608-40dd2054aeda.json
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
@@ -40,21 +42,20 @@ python 2_write_book_using_ai.py \
 
 ```sh
 # Choose one of those:
-
-python 3_md_to_mp3.py \
+python 3_md_to_audio.py \
   --input_file book_output.md \
   --output_folder ./audio_output \
   --provider openai \
   --voice nova \
   --model gpt-4o-mini-tts
 
-python 3_md_to_mp3.py \
+python 3_md_to_audio.py \
   --input_file book_output.md \
   --output_folder ./audio_output \
   --provider elevenlabs \
   --voice EmspiS7CSUabPeqBcrAP 
 
-python 3_md_to_mp3.py \
+python 3_md_to_audio.py \
   --input_file book_output.md \
   --output_folder ./audio_output \
   --provider google \
@@ -65,45 +66,45 @@ python 3_md_to_mp3.py \
 5. Merge chunks into single MP3/MP4 file / compress / make M4B audiobook (optional):
 
 ```sh
-# Merge specific files
-python 4_merge_mp3.py \
-  -i file1.mp3 file2.mp3 file3.mp3 \
-  -o merged_output.mp3
-
-# Merge files using glob pattern
-python 4_merge_mp3.py \
-  --pattern "book_output_chunk_*.mp3" \
-  -o merged_output.mp3
-
-# Merge with custom silence duration (in milliseconds)
-python 4_merge_mp3.py \
-  -i file1.mp3 file2.mp3 \
-  -o merged_output.mp3 \
-  --silence 1000
-
-# Merge and delete input files after
-python 4_merge_mp3.py \
-  --pattern "book_output_chunk_*.mp3" \
-  -o merged_output.mp3 \
-  --delete-input
-
-# Compress (format mp3 or aac, bitrate 128k, 192k, 256k (aac), 320k (mp3))
-python 5_compress.py \
-  --input_folder audio_output \
-  --output_folder audio_compressed \
-  --format aac
-
-python 5_compress.py \
-  --input_folder audio_output \
-  --output_folder audio_compressed \
-  --format mp3 \
-  --bitrate 256k
-
 # Create M4B audiobook (it's doing the compression, so you don't have to)
-python3 6_create_m4b.py \
+python 4a_create_m4b.py \
   -i audio_output/*.wav \
   -o book_wav.m4b \
   --title "My Great Book" \
   --author "Author Name" \
   --cover cover.jpg
+
+# Compress (format mp3 or aac, bitrate 128k, 192k, 256k (aac), 320k (mp3))
+python 4a_compress.py \
+  --input_folder audio_output \
+  --output_folder audio_compressed \
+  --format aac
+
+python 4a_compress.py \
+  --input_folder audio_output \
+  --output_folder audio_compressed \
+  --format mp3 \
+  --bitrate 256k  
+
+# Merge specific files
+python 4c_merge_mp3.py \
+  -i file1.mp3 file2.mp3 file3.mp3 \
+  -o merged_output.mp3
+
+# Merge files using glob pattern
+python 4c_merge_mp3.py \
+  --pattern "book_output_chunk_*.mp3" \
+  -o merged_output.mp3
+
+# Merge with custom silence duration (in milliseconds)
+python 4c_merge_mp3.py \
+  -i file1.mp3 file2.mp3 \
+  -o merged_output.mp3 \
+  --silence 1000
+
+# Merge and delete input files after
+python 4c_merge_mp3.py \
+  --pattern "book_output_chunk_*.mp3" \
+  -o merged_output.mp3 \
+  --delete-input
 ```
