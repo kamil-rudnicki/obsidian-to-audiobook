@@ -404,7 +404,17 @@ def main():
         # Clean up any trailing separators
         safe_title = safe_title.rstrip('_-')
             
-        output_file = output_dir / f"{safe_title}.{file_extension}"
+        # Define filenames with index
+        index_str = f"{section_idx + 1:04d}"
+        
+        # Check for existing non-indexed file and rename if needed
+        old_output_file = output_dir / f"{safe_title}.{file_extension}"
+        output_file = output_dir / f"{index_str}_{safe_title}.{file_extension}"
+        
+        if old_output_file.exists() and not output_file.exists():
+            print(f"Renaming existing file: {old_output_file.name} -> {output_file.name}")
+            old_output_file.rename(output_file)
+            
         print(f"Target file: {output_file}")
         
         if output_file.exists():

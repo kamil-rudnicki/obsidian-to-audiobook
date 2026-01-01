@@ -182,6 +182,19 @@ def get_files_from_pattern(pattern):
     
     return [Path(f) for f in files]
 
+def sort_files_by_prefix(files):
+    """Sort files based on numeric prefix in filename."""
+    def get_sort_key(file_path):
+        # Extract leading number
+        match = re.match(r'^(\d+)', file_path.name)
+        if match:
+            # (priority, number, original_name)
+            # Priority 0 for numbered files, 1 for others
+            return (0, int(match.group(1)), file_path.name)
+        return (1, 0, file_path.name)
+    
+    return sorted(files, key=get_sort_key)
+
 def main():
     parser = argparse.ArgumentParser(
         description='Combine audio files into an M4B audiobook with chapters.',
@@ -226,8 +239,8 @@ Examples:
                     else:
                         print(f"Warning: File not found: {item}")
 
-    # Remove duplicates and sort
-    input_files = sorted(list(dict.fromkeys(input_files)))
+    # Remove duplicates and sort by numeric prefix
+    input_files = sort_files_by_prefix(list(dict.fromkeys(input_files)))
     
     if not input_files:
         print("Error: No input files found.")

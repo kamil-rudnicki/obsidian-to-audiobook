@@ -58,7 +58,7 @@ def call_openrouter_api(content, api_key, model, prompt):
     
     payload = {
         "model": model,
-        "temperature": 0.5,
+        "temperature": 1.5,
         "messages": [
             {
                 "role": "user",

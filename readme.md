@@ -33,7 +33,7 @@ python 2_write_book_using_ai.py \
   --value personal \
   --output_file book_output.md \
   --randomize \
-  --prompt "Can you make a book text from text below? Make random choice about the writing style, from authors starting from greek philosophy to modern day. try to write something about every concept in the text. Don't use any formatting. Only add new lines. Write in engaging and easy way. If possible write stories. Sometimes add narrations and comments. If there is nothing to write about, write nothing, vary character response from short lik 200 characters to 4000."
+  --prompt "Can you make a book text from text below? Make random choice about the writing style, from authors starting from greek philosophy (10%) to modern day authors (90%). Try to write something about every concept in the text. Don't use any formatting. Only add new lines. Write in engaging and easy way. If possible write stories. Sometimes add narrations and comments. If there is nothing to write about, write nothing, vary character response from short like 200 characters to 4000."
 ```
 
 4. Create audio chunks:
