@@ -9,6 +9,7 @@ import os
 import random
 import sys
 from pathlib import Path
+from datetime import datetime
 from dotenv import load_dotenv
 import requests
 import time
@@ -57,6 +58,7 @@ def call_openrouter_api(content, api_key, model, prompt):
     
     payload = {
         "model": model,
+        "temperature": 0.5,
         "messages": [
             {
                 "role": "user",
@@ -198,12 +200,13 @@ def main():
     for idx, row in enumerate(filtered_rows, 1):
         file_name = row['file_name']
         relative_path = row['relative_path']
+        t_start = datetime.now().strftime("%H:%M:%S")
         
-        print(f"\n[{idx}/{len(filtered_rows)}] Processing: {file_name}")
+        prefix = f"[{t_start}] [{idx}/{len(filtered_rows)}] {file_name}"
         
         # Check if already processed
         if file_name in already_processed:
-            print(f"  → Already processed, skipping")
+            print(f"{prefix} | Already processed, skipping")
             continue
         
         try:
@@ -211,27 +214,26 @@ def main():
             content = read_markdown_file(args.folder, relative_path)
             
             if not content.strip():
-                print(f"  → Skipping empty file")
+                print(f"{prefix} | Skipping empty file")
                 continue
             
-            print(f"  → File has {len(content)} characters")
-            print(f"  → Sending to AI...")
+            # Print initial status without newline
+            print(f"{prefix} ({len(content)} chars) | Sending to AI...", end="", flush=True)
             
             # Call AI API
             ai_response = call_openrouter_api(content, api_key, model, args.prompt)
             
-            print(f"  → AI response: {len(ai_response)} characters")
-            
             # Append to output file
             append_to_output_file(args.output_file, file_name, ai_response)
             
-            print(f"  ✓ Written to output file")
+            # Finish the line
+            print(f" done ({len(ai_response)} chars) ✓")
             
             # Small delay to avoid rate limiting
             time.sleep(1)
             
         except Exception as e:
-            print(f"  ✗ Error processing {file_name}: {e}")
+            print(f"\n{prefix} ✗ Error processing {file_name}: {e}")
             continue
     
     print(f"\n✓ Processing complete! Output saved to: {args.output_file}")

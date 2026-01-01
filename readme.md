@@ -6,16 +6,10 @@
 
 ```bash
 OPENROUTER_API_KEY=your_openrouter_api_key
-OPENROUTER_MODEL=google/gemini-3-flash-preview
-
-# Either OpenAI or ElevenLabs
-
+OPENROUTER_MODEL=anthropic/claude-sonnet-4.5
 OPENAI_API_KEY=your_openai_api_key
-OPENAI_VOICE=nova # `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
-OPENAI_TTS_MODEL=gpt-4o-mini-tts # Models: `tts-1` (faster) or `tts-1-hd` (higher quality)
-
+GOOGLE_APPLICATION_CREDENTIALS=/full/path/google-service-account-442608-40dd2054aeda.json
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
-ELEVENLABS_VOICE_ID=nPczCjzI2devNBz1zQrb
 ```
 
 2. Create csv file with all your notes:
@@ -42,21 +36,33 @@ python 2_write_book_using_ai.py \
   --prompt "Can you make a book text from text below? Make random choice about the writing style, from authors starting from greek philosophy to modern day. try to write something about every concept in the text. Don't use any formatting. Only add new lines. Write in engaging and easy way. If possible write stories. Sometimes add narrations and comments. If there is nothing to write about, write nothing, vary character response from short lik 200 characters to 4000."
 ```
 
-4. Create MP3 chunks:
+4. Create audio chunks:
 
 ```sh
-python 3_md_to_mp3.py \
-  --input_file book_output.md \
-  --output_file book_output.mp3 \
-  --provider openai
+# Choose one of those:
 
 python 3_md_to_mp3.py \
   --input_file book_output.md \
-  --output_file book_output.mp3 \
-  --provider elevenlabs
+  --output_folder ./audio_output \
+  --provider openai \
+  --voice nova \
+  --model gpt-4o-mini-tts
+
+python 3_md_to_mp3.py \
+  --input_file book_output.md \
+  --output_folder ./audio_output \
+  --provider elevenlabs \
+  --voice EmspiS7CSUabPeqBcrAP 
+
+python 3_md_to_mp3.py \
+  --input_file book_output.md \
+  --output_folder ./audio_output \
+  --provider google \
+  --voice en-US-Chirp3-HD-Charon \
+  --language en-US
 ```
 
-5. Merge chunks into single MP3 file (optional):
+5. Merge chunks into single MP3/MP4 file or compress (optional):
 
 ```sh
 # Merge specific files
@@ -80,4 +86,16 @@ python 4_merge_mp3.py \
   --pattern "book_output_chunk_*.mp3" \
   -o merged_output.mp3 \
   --delete-input
+
+# Compress (format mp3 or aac, bitrate 128k, 192k, 256k (aac), 320k (mp3))
+python 5_compress.py \
+  --input_folder audio_output \
+  --output_folder audio_compressed \
+  --format aac
+
+python 5_compress.py \
+  --input_folder audio_output \
+  --output_folder audio_compressed \
+  --format mp3 \
+  --bitrate 256k
 ```

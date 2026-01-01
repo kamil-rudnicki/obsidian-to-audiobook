@@ -3,3 +3,5 @@
 *.mp3
 .env
 personal.readme.md
+*.wav
+.DS_Store
