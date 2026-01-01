@@ -6,3 +6,6 @@
 .env
 personal.readme.md
 .DS_Store
+*.m4b
+*.png
+*.jpg

@@ -62,7 +62,7 @@ python 3_md_to_mp3.py \
   --language en-US
 ```
 
-5. Merge chunks into single MP3/MP4 file or compress (optional):
+5. Merge chunks into single MP3/MP4 file / compress / make M4B audiobook (optional):
 
 ```sh
 # Merge specific files
@@ -98,4 +98,12 @@ python 5_compress.py \
   --output_folder audio_compressed \
   --format mp3 \
   --bitrate 256k
+
+# Create M4B audiobook (it's doing the compression, so you don't have to)
+python3 6_create_m4b.py \
+  -i audio_output/*.wav \
+  -o book_wav.m4b \
+  --title "My Great Book" \
+  --author "Author Name" \
+  --cover cover.jpg
 ```
